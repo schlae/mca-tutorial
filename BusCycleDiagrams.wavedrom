@@ -1,0 +1,113 @@
+
+
+{
+  foot:{ text:'Basic Transfer, 200ns Cycle' },
+  signal: [
+    {name: '', node:'....0.1.2'},
+    {name: 'cmd#', wave:'0.1.0.1.0'},
+    {name: 'adl#', wave: '1..01..01'},
+    {name: 's0#', wave:  '417..14..', data: ['prev', 'read/write', 'next']},
+    {name: 's1#', wave:  '417..14..', data: ['prev', 'read/write', 'next']},
+    {name: 'addr', wave: '47...4...', data: ['prev', 'addr', 'next']},
+    {name: 'm/io#', wave: '47...4...', data: ['prev', 'memory or IO', 'next']},
+    {name: 'data', wave: '4..7...4.', data: ['prev', 'write data', 'next']},
+    {name: 'data', wave: '4...z7.4.', data: ['prev', 'read', 'next']}
+]}
+
+
+{
+  foot:{ text:'Basic Transfer, 300ns Cycle' },
+  signal: [
+    {name: '', node:'....0.1.2.3'},
+    {name: 'cmd#', wave:'0.1.0...1.0'},
+    {name: 'adl#', wave: '1..01....01'},
+    {name: 's0#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 's1#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 'addr', wave: '47...4.....', data: ['prev', 'addr', 'next']},
+    {name: 'm/io#', wave: '47...4.....', data: ['prev', 'memory or IO', 'next']},
+    {name: 'data', wave: '4..7.....4.', data: ['prev', 'write data', 'next']},
+    {name: 'data', wave: '4...z.7..4.', data: ['prev', 'read data', 'next']}
+]}
+
+
+{
+  foot:{ text:'Setup Transfer, 300ns Cycle' },
+  signal: [
+    {name: '', node:'....0.1.2.3'},
+    {name: 'cmd#', wave:'0.1.0...1.0'},
+    {name: 'adl#', wave: '1..01....01'},
+    {name: 'cdsetup#', wave:'1.0..1.....'},
+    {name: 's0#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 's1#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 'addr', wave: '47...4.....', data: ['prev', 'addr', 'next']},
+    {name: 'm/io#', wave: '40...4.....', data: ['prev', 'next']},
+    {name: 'data', wave: '4..7.....4.', data: ['prev', 'write data', 'next']},
+    {name: 'data', wave: '4...z.7..4.', data: ['prev', 'read data', 'next']}
+]}
+
+
+{
+  foot:{ text:'Synchronous Extended Transfer, 300ns Cycle' },
+  signal: [
+    {name: '', node:'....0.1.2.3'},
+    {name: 'clock', wave:'p....', period:2},
+    {name: 'cmd#', wave:'0.1.0...1.0', node:'........b'},
+    {name: 'chrdy', wave:'1...01......', node:'.....a', phase:0.8},
+    {name: 'adl#', wave: '1..01....01'},
+    {name: 's0#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 's1#', wave:  '417..1..4..', data: ['prev', 'read/write', 'next']},
+    {name: 'addr', wave: '47...4.....', data: ['prev', 'addr', 'next']},
+    {name: 'm/io#', wave: '47...4.....', data: ['prev', 'memory or IO', 'next']},
+    {name: 'data', wave: '4..7.....4.', data: ['prev', 'write data', 'next']},
+    {name: 'data', wave: '4...z.7..4.', data: ['prev', 'read data', 'next']}
+],
+  edge: ['a~b 200ns']
+}
+
+
+{
+  foot:{ text:'Asynchronous Extended Transfer, 500ns Cycle' },
+  signal: [
+    {name: '', node:'....0.1.2.3.4.5'},
+    {name: 'clock', wave:'p......', period:2},
+    {name: 'cmd#', wave:'0.1.0.......1.0', node:'............b'},
+    {name: 'chrdy', wave:'1...0....1......', node: '.........a', phase:0.8},
+    {name: 'adl#', wave: '1..01........01'},
+    {name: 's0#', wave:  '417..1......4..', data: ['prev', 'read/write', 'next']},
+    {name: 's1#', wave:  '417..1......4..', data: ['prev', 'read/write', 'next']},
+    {name: 'addr', wave: '47...u4........', data: ['prev', 'addr', 'next']},
+    {name: 'm/io#', wave: '47...4.........', data: ['prev', 'memory or IO', 'next']},
+    {name: 'data', wave: '4..7.........4.', data: ['prev', 'write data', 'next']},
+    {name: 'data', wave: '4...z.7......4.', data: ['prev', 'read data', 'next']}
+],
+  edge: ['a~b 200ns']
+}
+
+
+{
+  foot:{ text:'Single DMA Transfer, Memory to I/O' },
+  signal: [
+    {name: 'cmd#', wave:'N.hN.h', period:2},
+    {name: 'status', wave:  '1x1..7171...', data: ['read', 'write', 'read', 'write']},
+    {name: 'addr', wave: 'x....7.5.x..', data: ['address', '0x0000', 'address+1', '0x0000']},
+    {name: 'm/io#', wave:'x....1.0.1..', data: ['memory or IO', 'next']},
+    {name: 'data', wave: 'x.....7...x.', data: ['data', 'more data']},
+    {name: 'preempt#', wave:'10....1......', phase:1},
+    {name: 'arb[3:0]', wave:'1.27......1.', data: ['5','Arbitration level 2']},
+    {name: 'arb/gnt#', wave:'0.1..0....10'}
+]}
+
+
+{
+  foot:{ text:'Burst DMA Transfer, Memory to I/O' },
+  signal: [
+    {name: 'cmd#', wave:'N.hN...h', period:2},
+    {name: 'status', wave:  '1x1..71717171...', data: ['read', 'write', 'read', 'write']},
+    {name: 'addr', wave: 'x....7.5.7.5.x..', data: ['address', '0x0000', 'address+1', '0x0000']},
+    {name: 'm/io#', wave:'x....1.0.1.0.1..', data: ['memory or IO', 'next']},
+    {name: 'data', wave: 'x.....7...7...x.', data: ['data', 'more data']},
+    {name: 'preempt#', wave:'10....1..........', phase:1},
+    {name: 'arb[3:0]', wave:'1.27..........1.', data: ['5','Arbitration level 2']},
+    {name: 'burst#', wave:'1....0.......1..'},
+    {name: 'arb/gnt#', wave:'0.1..0........10'}
+]}
