@@ -154,7 +154,7 @@ Drive vs Recieve: This refers to the role taken on by this type of expansion car
 ### The Default Transfer
 Let's take a look at a basic (default) bus transfer to get started. Here's a timing diagram taken from the PS/2 hardware interface technical reference manual and modified to make it more like the real timings measured on my PS/2 Model 50Z.
 
-![Default 200ns MCA bus timing diagram](https://github.com/schlae/mca-tutorial/blob/master/images/Basic200.png)
+![Default 200ns MCA bus timing diagram](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/Basic200.png)
 
 Compared with the old ISA bus, IBM made some changes to things that seem a bit pointless. The S0 and S1 status signals are just WRITE# and READ# with new names. S0 going low indicates a write, and S1 going low indicates a read. I think the reason they did this was to try and convert to a synchronous bus architecture. In this design, a new line, called CMD#, acts as the clock. READ# and WRITE# have no meaning until you reach the falling edge of CMD#.
 
@@ -168,7 +168,7 @@ Going back to the ADL# line, I prefer to use it to gain some extra timing margin
 
 Speaking of timing, many MCA computers use a longer cycle time for IO operations. My Model 50Z uses 300ns, such as in this diagram:
 
-![Default 300ns cycle timing diagram](https://github.com/schlae/mca-tutorial/blob/master/images/Basic300.png)
+![Default 300ns cycle timing diagram](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/Basic300.png)
 
 Notice that the extra 100ns is inserted in the state where CMD# is low, allowing the expansion card extra time to read or write data.
 
@@ -179,11 +179,11 @@ IBM provided a way for expansion cards to slow down read or write operations. By
 
 Here's a timing diagram showing a bus operation that has been slowed down in this way.
 
-![300ns synchronous extended cycle timing diagram](https://github.com/schlae/mca-tutorial/blob/master/images/SyncExtended.png)
+![300ns synchronous extended cycle timing diagram](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/SyncExtended.png)
 
 If the card asserts CD\_CHRDY right after CMD# falls, then you get what IBM calls an *synchronous extended cycle* which has a minimum total cycle time of 300ns. But if you continue to hold CD\_CHRDY low, then the planar will extend the bus cycle in increments. Oh, by the way, the increment depends on the machine! You see, the planar is actually inserting *wait states* which prevent the processor from accessing memory. Typically a wait state is a full processor cycle. On my Model 50Z, this is 100ns.
 
-![500ns asyncronous extended cycle timing diagram](https://github.com/schlae/mca-tutorial/blob/master/images/AsyncExtended.png)
+![500ns asyncronous extended cycle timing diagram](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/AsyncExtended.png)
 
 In theory you can extend a bus cycle indefinitely, but in practice, if you take too long, you'll crash the computer! IBM specifies a limit of 3.5us.
 
@@ -213,7 +213,7 @@ Notice that some computers have a different default cycle for I/O? If you only t
 
 The last type of transfer is the *setup transfer*. IBM created this as a system for talking to one expansion card at a time. It works like a basic bus cycle but, along with the address lines, the planar asserts a special signal that is unique to each card slot. This is the CD\_SETUP# signal.
 
-![300ns setup cycle timimg diagram](https://github.com/schlae/mca-tutorial/blob/master/images/Setup.png)
+![300ns setup cycle timimg diagram](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/Setup.png)
 
 When the card sees this signal asserted when it latches the address and M/IO# lines, it looks for accesses to a special set of registers, called the *programmable option select* or POS registers, showing up at 0x100 to 0x107.
 
@@ -284,7 +284,7 @@ Once PREEMPT# goes low, the planar decides when to start the arbitration process
 
 First, the planar brings another control line, ARB/GNT# high. When this happens, each card puts its DMA arbitration level (formerly known as the DMA channel number) onto a special 4-bit open-drain arbitration bus, ARB[3:0]. Using combinational logic, each card is supposed to check the state of the bus, starting with the most significant bit. If it is trying to drive a 1 (open-drain means the card lets the pin float) and it reads back a 0, a higher-priority device has won arbitration. At that point the card should give up and not drive the remaining arbitration bus lines. On the other hand, if the bit matches, then the card drives the next bit, checks it, and continues until bit 0. If everything matches, then it wins arbitration and releases the PREEMPT# line. In their hardware interface technical reference manual, IBM provides a schematic for combinational logic that implements this arbitration function. I've redrawn it here using standard logic symbols.
 
-![MCA arbitration logic](https://github.com/schlae/mca-tutorial/blob/master/images/ArbCircuit.png)
+![MCA arbitration logic](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/ArbCircuit.png)
 
 Maybe an example will help. Given two devices, one with a level of 0x2 (0010) and the other with a level of 0x5 (0101):
 
@@ -297,7 +297,7 @@ Next, the planar brings ARB/GNT# low, which officially starts the DMA transfer, 
 
 To end the transfer, the planar pulses ARB/GNT# high and then low again to prepare for the next transfer.
 
-![Single DMA transfer](https://github.com/schlae/mca-tutorial/blob/master/images/SingleDMA.png)
+![Single DMA transfer](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/SingleDMA.png)
 
 In practice, there are a few wrinkles to look out for. A card should monitor ARB/GNT# and should not request a DMA transfer partway through. The reason is that a late DMA request, occuring in the middle of an arbitration cycle, does not allow enough propagation time for the arbitration logic, and may cause the card to think it has won arbitration when it has actually lost it.
 
@@ -332,7 +332,7 @@ Conveniently, the DMA IO transfer cycle can be lengthened by the expansion card 
 ### Burst Transfers
 If an expansion card wants to transfer a block of data at a time, it can request a burst transfer. Remember the arbitration cycle? When the card wins arbitration but before ARB/GNT# goes low, it can pull another control line, BURST#, and hold it low until the last data transfer, at which point it releases the line to let the planar know that no more transfers are needed.
 
-![Burst DMA transfer](https://github.com/schlae/mca-tutorial/blob/master/images/BurstDMA.png)
+![Burst DMA transfer](https://raw.githubusercontent.com/schlae/mca-tutorial/main/images/BurstDMA.png)
 
 Sounds simple? It's not so bad, but there are caveats.
 
