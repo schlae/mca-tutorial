@@ -5,150 +5,6 @@ Oh, you're still here. Hold on tight, it's quite a ride.
 
 For the purposes of this tutorial, I'm assuming you're familiar with digital logic and computer interface buses, particularly ISA. I'll refer to ISA because it clearly influenced the design of MCA.
 
-## The Pinout
-This is also the same connector as the VESA Local Bus (VLB). The story goes that IBM was planning on everyone having to use the new bus standard, so the connector companies tooled up and made lots and lots of them. But then the bus didn't really take off outside of IBM, and so the connectors got unloaded for cheap on the open market...
-
-| Pin | Name | Pin | Name |
-| --- | ---- | --- | ---- |
-| B01 | Audio GND | A01 | CD\_SETUP# |
-| B02 | Audio | A02 | MADE24 |
-| B03 | GND | A03 | GND |
-| B04 | 14.318MHZ OSC | A04 | A11 |
-| B05 | GND | A05 | A10 |
-| B06 | A23 | A06 | A09 |
-| B07 | A22 | A07 | +5V |
-| B08 | A21 | A08 | A8 |
-| B09 | GND | A09 | A7 |
-| B10 | A20 | A10 | A6 |
-| B11 | A19 | A11 | +5V |
-| B12 | A18 | A12 | A5 |
-| B13 | GND | A13 | A4 |
-| B14 | A17 | A14 | A3 |
-| B15 | A16 | A15 | +5V |
-| B16 | A15 | A16 | A2 |
-| B17 | GND | A17 | A1 |
-| B18 | A14 | A18 | A0 |
-| B19 | A13 | A19 | +12V |
-| B20 | A12 | A20 | ADL# |
-| B21 | GND | A21 | PREEMPT# |
-| B22 | IRQ9# | A22 | BURST# |
-| B23 | IRQ3# | A23 | -12V |
-| B24 | IRQ4# | A24 | ARB0 |
-| B25 | GND | A25 | ARB1 |
-| B26 | IRQ5# | A26 | ARB2 |
-| B27 | IRQ6# | A27 | -12V |
-| B28 | IRQ7# | A28 | ARB3 |
-| B29 | GND | A29 | ARB/GNT# |
-| B30 | Reserved | A30 | TC# |
-| B31 | Reserved | A31 | +5V |
-| B32 | CHCK# | A32 | S0# |
-| B33 | GND | A33 | S1# |
-| B34 | CMD# | A34 | M/IO# |
-| B35 | CHRDYRTN | A35 | +12V |
-| B36 | CD\_SFD# | A36 | CD\_CHRDY |
-| B37 | GND | A37 | D0 |
-| B38 | D1 | A38 | D2 |
-| B39 | D3 | A39 | +5V |
-| B40 | D4 | A40 | D5 |
-| B41 | GND | A41 | D6 |
-| B42 | CHRESET | A42 | D7 |
-| B43 | Reserved | A43 | GND |
-| B44 | Reserved | A44 | DS\_16\_RTN# |
-| B45 | GND | A45 | REFRESH# |
-| B46 | (key) | A46 | (key) |
-| B47 | (key) | A47 | (key) |
-| B48 | D8 | A48 | +5V |
-| B49 | D9 | A49 | D10 |
-| B50 | GND | A50 | D11 |
-| B51 | D12 | A51 | D13 |
-| B52 | D14 | A52 | +12V |
-| B53 | D15 | A53 | Reserved |
-| B54 | GND | A54 | SBHE# |
-| B55 | IRQ10# | A55 | CD\_DS\_16# |
-| B56 | IRQ11# | A56 | +5V |
-| B57 | IRQ12# | A57 | IRQ14# |
-| B58 | GND | A58 | IRQ15# |
-
-Here's the 32-bit version. It's similar to the 16-bit connector but the rear of the connector has several more pins.
- 
-| Pin | Name | Pin | Name |
-| --- | ---- | --- | ---- |
-| B59 | Reserved | A59 | Reserved |
-| B60 | Reserved | A60 | Reserved |
-| B61 | Reserved | A61 | GND |
-| B62 | Reserved | A62 | Reserved |
-| B63 | GND | A63 | Rserved |
-| B64 | D16 | A64 | Reserved |
-| B65 | D17 | A65 | +12V |
-| B66 | D18 | A66 | D19 |
-| B67 | GND | A67 | D20 |
-| B68 | D22 | A68 | D21 |
-| B69 | D23 | A69 | +5V |
-| B70 | Reserved | A70 | D24 |
-| B71 | GND | A71 | D25 |
-| B72 | D27 | A72 | D26 |
-| B73 | D28 | A73 | +5V |
-| B74 | D29 | A74 | D30 |
-| B75 | GND | A75 | D31 |
-| B76 | BE0# | A76 | Reserved |
-| B77 | BE1# | A77 | +12V |
-| B78 | BE2# | A78 | BE3# |
-| B79 | GND | A79 | DS\_32\_RTN# |
-| B80 | TR32 | A80 | CD\_DS\_32 |
-| B81 | A24 | A81 | +5V |
-| B82 | A25 | A82 | A26 |
-| B83 | GND | A83 | A27 |
-| B84 | A29 | A84 | A28 |
-| B85 | A30 | A85 | +5V |
-| B86 | A31 | A86 | Reserved |
-| B87 | GND | A87 | Reserved |
-| B88 | Reserved | A88 | Reserved |
-| B89 | Reserved | A89 | GND |
-
-Each pin has a specific type of driver circuit on the planar. The IBM documentation has a table which can be hard to read, so I've simplified it and included it below.
-
-Drive vs Recieve: This refers to the role taken on by this type of expansion card. Should the card drive the signal? Should the card receive the signal?
-
-| Signal | Driver Type | DMA <br /> Drive | DMA <br /> Recv  | Memory <br /> Drive  | Memory <br /> Recv  | IO <br /> Drive  | IO <br /> Recv  |
-| ------ | ----------- | --------- | -------- | ------------ | ----------- | -------- | ------- |
-| A[31:0]      | TS | - | R | - | R | - | R |
-| D[31:0]      | TS | D | R | D | R | D | R |
-| ADL#         | TS | - | O | - | O | - | O |
-| CD\_DS\_16#  | PP | # | - | # | - | # | - |
-| DS\_16\_RTN# | BD | - | - | - | - | - | - |
-| SBHE#        | TS | - | # | - | # | - | # |
-| MADE24       | TS | - | - | - | R | - | - |
-| M/IO#        | TS | - | R | - | R | - | R |
-| S0#, S1#     | TS | - | R | - | R | - | R |
-| CMD#         | TS | - | R | - | R | - | R |
-| CD\_SFDBK#   | PP | D | - | D | - | D | - |
-| CD\_CHRDY    | PP | O | - | O | - | O | - |
-| CHRDYRTN     | BD | - | - | - | - | - | - |
-| ARB[3:0]     | OC | D | R | - | - | - | - |
-| BURST#       | OC | # | - | - | - | - | - |
-| PREEMPT#     | OC | D | # | - | - | - | - |
-| ARB/GNT#     | BD | - | R | - | - | - | - |
-| TC#          | TS | - | O | - | - | - | - |
-| IRQn#        | OC | O | - | - | - | O | - |
-| CD\_SETUP#   | PP | - | R | - | R | - | R |
-| CHCK#        | OC | D | - | D | - | D | - |
-| REFRESH#     | TS | - | O | - | R | - | O |
-| OSC          | CD | - | O | - | O | - | O |
-| CHRESET      | BD | - | R | - | R | - | R |
-| BE[3:0]      | TS | - | R | - | R | - | R |
-| CD\_DS\_32#  | PP | # | - | # | - | # | - |
-| DS\_32\_RTN  | BD | - | - | - | - | - | - |
-| TR\_32       | TS | - | - | O | - | O | - |
-
-
-|  | Driver Type |  | Drive/Recv |
-| -- | --------- | -- | ---------- |
-| OC | Open Collector | D | Drive enabled |
-| TS | Tri-State | R | Receive enabled |
-| PP | Push-Pull | O | Optional |
-| BD | Bus Driver | - | Not Implemented |
-| CD | Clock Driver | # | Required for some implementations |
-
 ## Basics of Bus Transfers
 
 ### The Default Transfer
@@ -356,6 +212,151 @@ So imagine this situation:
 * Now I have a headache.
 
 ## Miscellanea
+
+### The Pinout
+This is also the same connector as the VESA Local Bus (VLB). The story goes that IBM was planning on everyone having to use the new bus standard, so the connector companies tooled up and made lots and lots of them. But then the bus didn't really take off outside of IBM, and so the connectors got unloaded for cheap on the open market...
+
+| Pin | Name | Pin | Name |
+| --- | ---- | --- | ---- |
+| B01 | Audio GND | A01 | CD\_SETUP# |
+| B02 | Audio | A02 | MADE24 |
+| B03 | GND | A03 | GND |
+| B04 | 14.318MHZ OSC | A04 | A11 |
+| B05 | GND | A05 | A10 |
+| B06 | A23 | A06 | A09 |
+| B07 | A22 | A07 | +5V |
+| B08 | A21 | A08 | A8 |
+| B09 | GND | A09 | A7 |
+| B10 | A20 | A10 | A6 |
+| B11 | A19 | A11 | +5V |
+| B12 | A18 | A12 | A5 |
+| B13 | GND | A13 | A4 |
+| B14 | A17 | A14 | A3 |
+| B15 | A16 | A15 | +5V |
+| B16 | A15 | A16 | A2 |
+| B17 | GND | A17 | A1 |
+| B18 | A14 | A18 | A0 |
+| B19 | A13 | A19 | +12V |
+| B20 | A12 | A20 | ADL# |
+| B21 | GND | A21 | PREEMPT# |
+| B22 | IRQ9# | A22 | BURST# |
+| B23 | IRQ3# | A23 | -12V |
+| B24 | IRQ4# | A24 | ARB0 |
+| B25 | GND | A25 | ARB1 |
+| B26 | IRQ5# | A26 | ARB2 |
+| B27 | IRQ6# | A27 | -12V |
+| B28 | IRQ7# | A28 | ARB3 |
+| B29 | GND | A29 | ARB/GNT# |
+| B30 | Reserved | A30 | TC# |
+| B31 | Reserved | A31 | +5V |
+| B32 | CHCK# | A32 | S0# |
+| B33 | GND | A33 | S1# |
+| B34 | CMD# | A34 | M/IO# |
+| B35 | CHRDYRTN | A35 | +12V |
+| B36 | CD\_SFD# | A36 | CD\_CHRDY |
+| B37 | GND | A37 | D0 |
+| B38 | D1 | A38 | D2 |
+| B39 | D3 | A39 | +5V |
+| B40 | D4 | A40 | D5 |
+| B41 | GND | A41 | D6 |
+| B42 | CHRESET | A42 | D7 |
+| B43 | Reserved | A43 | GND |
+| B44 | Reserved | A44 | DS\_16\_RTN# |
+| B45 | GND | A45 | REFRESH# |
+| B46 | (key) | A46 | (key) |
+| B47 | (key) | A47 | (key) |
+| B48 | D8 | A48 | +5V |
+| B49 | D9 | A49 | D10 |
+| B50 | GND | A50 | D11 |
+| B51 | D12 | A51 | D13 |
+| B52 | D14 | A52 | +12V |
+| B53 | D15 | A53 | Reserved |
+| B54 | GND | A54 | SBHE# |
+| B55 | IRQ10# | A55 | CD\_DS\_16# |
+| B56 | IRQ11# | A56 | +5V |
+| B57 | IRQ12# | A57 | IRQ14# |
+| B58 | GND | A58 | IRQ15# |
+
+Here's the 32-bit version. It's similar to the 16-bit connector but the rear of the connector has several more pins.
+ 
+| Pin | Name | Pin | Name |
+| --- | ---- | --- | ---- |
+| B59 | Reserved | A59 | Reserved |
+| B60 | Reserved | A60 | Reserved |
+| B61 | Reserved | A61 | GND |
+| B62 | Reserved | A62 | Reserved |
+| B63 | GND | A63 | Rserved |
+| B64 | D16 | A64 | Reserved |
+| B65 | D17 | A65 | +12V |
+| B66 | D18 | A66 | D19 |
+| B67 | GND | A67 | D20 |
+| B68 | D22 | A68 | D21 |
+| B69 | D23 | A69 | +5V |
+| B70 | Reserved | A70 | D24 |
+| B71 | GND | A71 | D25 |
+| B72 | D27 | A72 | D26 |
+| B73 | D28 | A73 | +5V |
+| B74 | D29 | A74 | D30 |
+| B75 | GND | A75 | D31 |
+| B76 | BE0# | A76 | Reserved |
+| B77 | BE1# | A77 | +12V |
+| B78 | BE2# | A78 | BE3# |
+| B79 | GND | A79 | DS\_32\_RTN# |
+| B80 | TR32 | A80 | CD\_DS\_32 |
+| B81 | A24 | A81 | +5V |
+| B82 | A25 | A82 | A26 |
+| B83 | GND | A83 | A27 |
+| B84 | A29 | A84 | A28 |
+| B85 | A30 | A85 | +5V |
+| B86 | A31 | A86 | Reserved |
+| B87 | GND | A87 | Reserved |
+| B88 | Reserved | A88 | Reserved |
+| B89 | Reserved | A89 | GND |
+
+Each pin has a specific type of driver circuit on the planar. The IBM documentation has a table which can be hard to read, so I've simplified it and included it below.
+
+Drive vs Receive: This refers to the role taken on by this type of expansion card. Should the card drive the signal? Should the card receive the signal?
+
+| Signal | Driver Type | DMA <br /> Drive | DMA <br /> Recv  | Memory <br /> Drive  | Memory <br /> Recv  | IO <br /> Drive  | IO <br /> Recv  |
+| ------ | ----------- | --------- | -------- | ------------ | ----------- | -------- | ------- |
+| A[31:0]      | TS | - | R | - | R | - | R |
+| D[31:0]      | TS | D | R | D | R | D | R |
+| ADL#         | TS | - | O | - | O | - | O |
+| CD\_DS\_16#  | PP | # | - | # | - | # | - |
+| DS\_16\_RTN# | BD | - | - | - | - | - | - |
+| SBHE#        | TS | - | # | - | # | - | # |
+| MADE24       | TS | - | - | - | R | - | - |
+| M/IO#        | TS | - | R | - | R | - | R |
+| S0#, S1#     | TS | - | R | - | R | - | R |
+| CMD#         | TS | - | R | - | R | - | R |
+| CD\_SFDBK#   | PP | D | - | D | - | D | - |
+| CD\_CHRDY    | PP | O | - | O | - | O | - |
+| CHRDYRTN     | BD | - | - | - | - | - | - |
+| ARB[3:0]     | OC | D | R | - | - | - | - |
+| BURST#       | OC | # | - | - | - | - | - |
+| PREEMPT#     | OC | D | # | - | - | - | - |
+| ARB/GNT#     | BD | - | R | - | - | - | - |
+| TC#          | TS | - | O | - | - | - | - |
+| IRQn#        | OC | O | - | - | - | O | - |
+| CD\_SETUP#   | PP | - | R | - | R | - | R |
+| CHCK#        | OC | D | - | D | - | D | - |
+| REFRESH#     | TS | - | O | - | R | - | O |
+| OSC          | CD | - | O | - | O | - | O |
+| CHRESET      | BD | - | R | - | R | - | R |
+| BE[3:0]      | TS | - | R | - | R | - | R |
+| CD\_DS\_32#  | PP | # | - | # | - | # | - |
+| DS\_32\_RTN  | BD | - | - | - | - | - | - |
+| TR\_32       | TS | - | - | O | - | O | - |
+
+
+|  | Driver Type |  | Drive/Recv |
+| -- | --------- | -- | ---------- |
+| OC | Open Collector | D | Drive enabled |
+| TS | Tri-State | R | Receive enabled |
+| PP | Push-Pull | O | Optional |
+| BD | Bus Driver | - | Not Implemented |
+| CD | Clock Driver | # | Required for some implementations |
+
 
 ### Channel Reset, Clocks, and Power
 The MCA bus connector provides a bus reset signal, CHRESET, that the card should use to clear its internal logic. It should also clear the card enable bit in POS register 0x102.
