@@ -59,7 +59,7 @@ I've tabulated a few timings here for convenience. Timing units are in nanosecon
 |  60   | 100 | 300 (I/O) 200 (mem) | 300 |
 |  65   | 62.5 | 250 | 375 |
 |  70   | 50   | 200 | 300 |
-|  80   | 62.5, 50, or 40 | 200 | 300 |
+|  80   | 62.5, 50, or 40 | 200 or 250 (16MHz) | 300 |
 |  90   | 40 | 200 | 300 |
 |  95   | 40, 30 | 200 or 240 | 300 or 320 |
 
